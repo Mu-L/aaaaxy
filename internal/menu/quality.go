@@ -101,12 +101,12 @@ func (s qualitySetting) applyActual() error {
 		flag.Set("draw_blurs", true)
 		flag.Set("draw_outside", true) // <-
 		flag.Set("expand_using_vertices_accurately", true)
-		flag.Set("screen_filter", "linear2x")
+		flag.Set("screen_filter", "simple")
 	case mediumQuality:
 		flag.Set("draw_blurs", true) // <-
 		flag.Set("draw_outside", false)
 		flag.Set("expand_using_vertices_accurately", true)
-		flag.Set("screen_filter", "linear2x") // <-
+		flag.Set("screen_filter", "simple") // <-
 	case lowQuality:
 		flag.Set("draw_blurs", false)
 		flag.Set("draw_outside", false)
