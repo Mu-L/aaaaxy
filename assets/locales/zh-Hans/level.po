@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 22:06-0500\n"
+"POT-Creation-Date: 2023-02-16 14:29-0500\n"
 "PO-Revision-Date: 2022-12-13 17:39+0000\n"
 "Last-Translator: Anthony Wang, 2023\n"
 "Language-Team: Chinese Simplified (https://www.transifex.com/aaaaxy/teams/158611/zh-Hans/)\n"
@@ -270,7 +270,7 @@ msgstr "如果没人追你，就不必要藏。"
 
 #: assets/maps/level.tmx//map/objectgroup/object[@id=395]
 msgid "Hide and seek is never fun without opponents."
-msgstr "没有对手，捉迷藏就不好玩。"
+msgstr "没有对手，捉迷藏就不好玩了。"
 
 #. Part of 'Welcome to Nexuiz!'
 #: assets/maps/level.tmx//map/objectgroup/object[@id=396]
@@ -469,7 +469,7 @@ msgstr "选择公理"
 #. https://www.youtube.com/watch?v=2Z4m4lnjxkY
 #: assets/maps/level.tmx//map/objectgroup/object[@id=1302]
 msgid "Trololololol, lololol, lololol{{BR}}Oh ha ha ha oh!"
-msgstr "Trololololol,{{BR}}lololol, lololol!"
+msgstr "Trololololol，{{BR}}lololol，lololol！"
 
 #: assets/maps/level.tmx//map/objectgroup/object[@id=1304]
 msgid "Turtles All the Way In"
@@ -744,7 +744,7 @@ msgstr "每个伟大冒险都是从这句话开始的：{{BR}}\"我知道一条�
 
 #: assets/maps/level.tmx//map/objectgroup/object[@id=2659]
 msgid "Sometimes you don't just lose sight of something."
-msgstr "有时你不能看不见某些东西。"
+msgstr "有时候你不能看不见某些东西。"
 
 #: assets/maps/level.tmx//map/objectgroup/object[@id=2665]
 msgid "Hey, I needed that!"

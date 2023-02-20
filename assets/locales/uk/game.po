@@ -14,13 +14,10 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 "X-Generator: xgotext\n"
 
-#. Character set used by the game for font glyph caching purposes. Should
-#. contain all characters used in any translation. In general, use the msgid
-#. and append all language specific special characters to it.
 #: font/charset.go
 msgid ""
 " "
-"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~τπö¾©éà"
+"!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~τπö¾©éàã"
 msgstr ""
 " "
 "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~τπö¾©éàАаБбВвГгҐґДдЕеЄєЖжЗзИиІіЇїЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЬьЮюЯя"
@@ -47,6 +44,7 @@ msgstr "%s(%d/%d)"
 msgid ", "
 msgstr ", "
 
+#. A speedrun category (all checkpoints reached).
 #: playerstate/playerstate.go
 msgid "100%"
 msgstr "100%"
@@ -67,22 +65,27 @@ msgstr "А: %s"
 msgid "Additional Programming Libraries & Tools"
 msgstr "Додаткові Бібліотеки та Інструменти"
 
+#. A speedrun category (all checkpoints reached, but game not won yet).
 #: playerstate/playerstate.go
 msgid "All Checkpoints"
 msgstr "Всі чекпоінти"
 
+#. A speedrun category (all checkpoints reached in flipped state).
 #: playerstate/playerstate.go
 msgid "All Flipped"
 msgstr "Перевертаємо все"
 
+#. A speedrun category (all notes seen).
 #: playerstate/playerstate.go
 msgid "All Notes"
 msgstr "Всі Нотатки"
 
+#. A speedrun category (all paths walked).
 #: playerstate/playerstate.go
 msgid "All Paths"
 msgstr "Всі Шляхи"
 
+#. A speedrun category (all secrets found).
 #: playerstate/playerstate.go
 msgid "All Secrets"
 msgstr "Всі Секрети"
@@ -97,6 +100,7 @@ msgstr "Алофі"
 msgid "Anchorage"
 msgstr "Анкорідж"
 
+#. A speedrun category (any way to finish the game).
 #: playerstate/playerstate.go
 msgid "Any%"
 msgstr "Будь який%"
@@ -159,6 +163,8 @@ msgstr "Бостон"
 msgid "Build: %s"
 msgstr "Будівництво: %s"
 
+#. A speedrun category (not a real one, but what we show if cheats are
+#. active).
 #: playerstate/playerstate.go
 msgid "Cheat%"
 msgstr "Чіт%"
@@ -310,22 +316,27 @@ msgstr "Середній"
 msgid "New York"
 msgstr "Нью-Йорк"
 
+#. A speedrun category (back button never pressed).
 #: playerstate/playerstate.go
 msgid "No Back"
 msgstr "Не Назад"
 
+#. A speedrun category (backspace key never pressed).
 #: playerstate/playerstate.go
 msgid "No Backspace"
 msgstr "Не Бекспейс"
 
+#. A speedrun category (escape key never pressed).
 #: playerstate/playerstate.go
 msgid "No Escape"
 msgstr "Не Escape"
 
+#. A speedrun category (start button never pressed).
 #: playerstate/playerstate.go
 msgid "No Start"
 msgstr "Не Старт"
 
+#. A speedrun category (never teleported).
 #: playerstate/playerstate.go
 msgid "No Teleports"
 msgstr "Не Телепорт"
@@ -338,11 +349,6 @@ msgstr "Нічого"
 #: fun/string.go
 msgid "Nuku'alofa"
 msgstr "Нукуалофа"
-
-#. Used in context "Welcome to ..." and "... Road Rage".
-#: fun/string.go
-msgid "Nuuk"
-msgstr "Нуук"
 
 #: menu/map.go
 msgid "Pick-a-Path"
@@ -467,6 +473,11 @@ msgstr "Увімкнути режим гри у Вікні"
 #: fun/string.go
 msgid "Sydney"
 msgstr "Сідней"
+
+#. Used in context "Welcome to ..." and "... Road Rage".
+#: fun/string.go
+msgid "São Paulo"
+msgstr "Сан-Паулу"
 
 #. Used in context "Welcome to ..." and "... Road Rage".
 #: fun/string.go

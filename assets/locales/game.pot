@@ -7,16 +7,13 @@ msgstr ""
 "Language: \n"
 "X-Generator: xgotext\n"
 
-#. Character set used by the game for font glyph caching purposes. Should
-#. contain all characters used in any translation. In general, use the msgid
-#. and append all language specific special characters to it.
 #: font/charset.go
 msgid ""
 " !\"#$%&'()*+,-./0123456789:;<=>?"
-"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~τπö¾©éà"
+"@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~τπö¾©éàã"
 msgstr ""
 
-#. Last separator when building a list.
+#. Last separator when building a list. Usually starts and ends with a space.
 #: fun/string.go playerstate/playerstate.go
 msgid " and "
 msgstr ""
@@ -33,11 +30,12 @@ msgstr ""
 msgid "%s (%d/%d)"
 msgstr ""
 
-#. Other separator when building a list.
+#. Other separator when building a list. Usually is a comma and a space.
 #: fun/string.go playerstate/playerstate.go
 msgid ", "
 msgstr ""
 
+#. A speedrun category (all checkpoints reached).
 #: playerstate/playerstate.go
 msgid "100%"
 msgstr ""
@@ -58,22 +56,27 @@ msgstr ""
 msgid "Additional Programming Libraries & Tools"
 msgstr ""
 
+#. A speedrun category (all checkpoints reached, but game not won yet).
 #: playerstate/playerstate.go
 msgid "All Checkpoints"
 msgstr ""
 
+#. A speedrun category (all checkpoints reached in flipped state).
 #: playerstate/playerstate.go
 msgid "All Flipped"
 msgstr ""
 
+#. A speedrun category (all notes seen).
 #: playerstate/playerstate.go
 msgid "All Notes"
 msgstr ""
 
+#. A speedrun category (all paths walked).
 #: playerstate/playerstate.go
 msgid "All Paths"
 msgstr ""
 
+#. A speedrun category (all secrets found).
 #: playerstate/playerstate.go
 msgid "All Secrets"
 msgstr ""
@@ -88,6 +91,7 @@ msgstr ""
 msgid "Anchorage"
 msgstr ""
 
+#. A speedrun category (any way to finish the game).
 #: playerstate/playerstate.go
 msgid "Any%"
 msgstr ""
@@ -150,6 +154,7 @@ msgstr ""
 msgid "Build: %s"
 msgstr ""
 
+#. A speedrun category (not a real one, but what we show if cheats are active).
 #: playerstate/playerstate.go
 msgid "Cheat%"
 msgstr ""
@@ -296,22 +301,27 @@ msgstr ""
 msgid "New York"
 msgstr ""
 
+#. A speedrun category (back button never pressed).
 #: playerstate/playerstate.go
 msgid "No Back"
 msgstr ""
 
+#. A speedrun category (backspace key never pressed).
 #: playerstate/playerstate.go
 msgid "No Backspace"
 msgstr ""
 
+#. A speedrun category (escape key never pressed).
 #: playerstate/playerstate.go
 msgid "No Escape"
 msgstr ""
 
+#. A speedrun category (start button never pressed).
 #: playerstate/playerstate.go
 msgid "No Start"
 msgstr ""
 
+#. A speedrun category (never teleported).
 #: playerstate/playerstate.go
 msgid "No Teleports"
 msgstr ""
@@ -323,11 +333,6 @@ msgstr ""
 #. Used in context "Welcome to ..." and "... Road Rage".
 #: fun/string.go
 msgid "Nuku'alofa"
-msgstr ""
-
-#. Used in context "Welcome to ..." and "... Road Rage".
-#: fun/string.go
-msgid "Nuuk"
 msgstr ""
 
 #: menu/map.go
@@ -456,6 +461,11 @@ msgstr ""
 
 #. Used in context "Welcome to ..." and "... Road Rage".
 #: fun/string.go
+msgid "São Paulo"
+msgstr ""
+
+#. Used in context "Welcome to ..." and "... Road Rage".
+#: fun/string.go
 msgid "Tehran"
 msgstr ""
 
@@ -477,7 +487,8 @@ msgstr ""
 msgid "The Cleats"
 msgstr ""
 
-#. Used in context "reached <location> with ... at <time>".
+#. Used in context "reached <location> with ... at <time>";
+#. "coil" here refers to an electromagnetic coil.
 #: fun/string.go
 msgid "The Coil"
 msgstr ""
@@ -487,7 +498,8 @@ msgstr ""
 msgid "The Gloves"
 msgstr ""
 
-#. Used in context "reached <location> with ... at <time>".
+#. Used in context "reached <location> with ... at <time>";
+#. "remote" here refers to e.g. a TV's remote control.
 #: fun/string.go
 msgid "The Remote"
 msgstr ""
