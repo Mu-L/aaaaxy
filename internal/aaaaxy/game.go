@@ -19,7 +19,6 @@ import (
 	"fmt"
 	go_image "image"
 	"math"
-	"math/rand"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -47,15 +46,15 @@ import (
 
 var (
 	screenFilter = flag.String("screen_filter", flag.SystemDefault(map[string]string{
-		"android/*": "simple",
-		"js/*":      "simple",
+		"android/*": "linear2x",
+		"js/*":      "linear2x",
 		"*/*":       "linear2xcrt",
 	}), "filter to use for rendering the screen; current possible values are 'simple', 'linear', 'linear2x', 'linear2xcrt' and 'nearest'")
 	// TODO(divVerent): Remove this flag when https://github.com/hajimehoshi/ebiten/issues/1772 is resolved.
 	screenFilterMaxScale    = flag.Float64("screen_filter_max_scale", 4.0, "maximum scale-up factor for the screen filter")
 	screenFilterScanLines   = flag.Float64("screen_filter_scan_lines", 0.1, "strength of the scan line effect in the linear2xcrt filters")
 	screenFilterCRTStrength = flag.Float64("screen_filter_crt_strength", 0.5, "strength of CRT deformation in the linear2xcrt filters")
-	screenFilterJitter      = flag.Float64("screen_filter_jitter", 0.0, "for any filter other than simple, amount of jitter to add to the filter")
+	screenStretch           = flag.Bool("screen_stretch", false, "stretch screen content instead of letterboxing")
 	paletteFlag             = flag.String("palette", flag.SystemDefault(map[string]string{
 		"android/*": "none",
 		"js/*":      "none",
@@ -477,15 +476,18 @@ func (g *Game) setOffscreenGeoM(screen *ebiten.Image, geoM *ebiten.GeoM, w, h in
 	sw, sh := screen.Size()
 	fw := float64(sw) / float64(w)
 	fh := float64(sh) / float64(h)
-	f := fw
-	if fh < fw {
-		f = fh
+	if *screenStretch {
+		geoM.Scale(fw, fh)
+	} else {
+		f := fw
+		if fh < fw {
+			f = fh
+		}
+		dx := (float64(sw) - f*float64(w)) * 0.5
+		dy := (float64(sh) - f*float64(h)) * 0.5
+		geoM.Scale(f, f)
+		geoM.Translate(dx, dy)
 	}
-	dx := (float64(sw) - f*float64(w)) * 0.5
-	dy := (float64(sh) - f*float64(h)) * 0.5
-	geoM.Scale(f, f)
-	geoM.Translate(dx, dy)
-	geoM.Translate((rand.Float64()-0.5)**screenFilterJitter, (rand.Float64()-0.5)**screenFilterJitter)
 }
 
 // First two terms of the Taylor expansion of asin(strength*x)/strength.
@@ -504,7 +506,7 @@ func crtK2() float64 {
 }
 
 func IsBuiltinFilter() bool {
-	return *screenFilter == "simple" || *screenFilter == "nearest"
+	return *screenFilter == "nearest" && !*screenStretch
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
@@ -558,6 +560,13 @@ DoneDisposing:
 		}
 		g.setOffscreenGeoM(screen, &options.GeoM, engine.GameWidth, engine.GameHeight)
 		screen.DrawImage(srcImage, options)
+	case *screenFilter == "nearest":
+		options := &ebiten.DrawImageOptions{
+			CompositeMode: ebiten.CompositeModeCopy,
+			Filter:        ebiten.FilterNearest,
+		}
+		g.setOffscreenGeoM(screen, &options.GeoM, engine.GameWidth, engine.GameHeight)
+		screen.DrawImage(srcImage, options)
 	case *screenFilter == "linear":
 		options := &ebiten.DrawImageOptions{
 			CompositeMode: ebiten.CompositeModeCopy,
@@ -573,7 +582,7 @@ DoneDisposing:
 			})
 			if err != nil {
 				log.Errorf("BROKEN RENDERER, WILL FALLBACK: could not load linear2x shader: %v", err)
-				*screenFilter = "simple"
+				*screenFilter = "linear"
 				return
 			}
 		}
@@ -618,12 +627,12 @@ DoneDisposing:
 		screen.DrawRectShader(engine.GameWidth, engine.GameHeight, g.linear2xCRTShader, options)
 	default:
 		log.Errorf("WARNING: unknown screen filter type: %q; reverted to simple", *screenFilter)
-		*screenFilter = "simple"
+		*screenFilter = "linear2x"
 	}
 }
 
 func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
-	if IsBuiltinFilter() {
+	if IsBuiltinFilter() && !*screenStretch {
 		g.screenWidth = engine.GameWidth
 		g.screenHeight = engine.GameHeight
 	} else {
@@ -637,6 +646,13 @@ func (g *Game) Layout(outsideWidth, outsideHeight int) (int, int) {
 			*screenFilterMaxScale)
 		g.screenWidth = int(engine.GameWidth * f)
 		g.screenHeight = int(engine.GameHeight * f)
+		if *screenStretch {
+			if g.screenWidth*outsideHeight > g.screenHeight*outsideWidth {
+				g.screenHeight = g.screenWidth * outsideHeight / outsideWidth
+			} else {
+				g.screenWidth = g.screenHeight * outsideWidth / outsideHeight
+			}
+		}
 	}
 	g.canUpdate = true
 	return g.screenWidth, g.screenHeight
