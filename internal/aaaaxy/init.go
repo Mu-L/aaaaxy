@@ -29,6 +29,7 @@ import (
 	"github.com/divVerent/aaaaxy/internal/engine"
 	"github.com/divVerent/aaaaxy/internal/exitstatus"
 	"github.com/divVerent/aaaaxy/internal/flag"
+	"github.com/divVerent/aaaaxy/internal/font"
 	"github.com/divVerent/aaaaxy/internal/image"
 	"github.com/divVerent/aaaaxy/internal/input"
 	"github.com/divVerent/aaaaxy/internal/locale"
@@ -111,6 +112,8 @@ func (g *Game) InitEbitengine() error {
 // and may take place in the first frame
 // if there is no way to run this before the main loop (e.g. on mobile).
 func (g *Game) InitEarly() error {
+	log.Infof("starting early initialization")
+
 	ebiten.SetFullscreen(*fullscreen)
 	ebiten.SetScreenClearedEveryFrame(false)
 	if *vsync {
@@ -152,10 +155,6 @@ func (g *Game) InitEarly() error {
 	if err != nil {
 		return fmt.Errorf("could not preinitialize dumping: %w", err)
 	}
-	err = palette.Init(engine.GameWidth, engine.GameHeight)
-	if err != nil {
-		return fmt.Errorf("could not initialize palettes: %w", err)
-	}
 
 	// Load images with the right palette from the start.
 	palette.SetCurrent(palette.ByName(*paletteFlag), *paletteRemapColors)
@@ -169,6 +168,8 @@ func (g *Game) InitEarly() error {
 
 	// Pause when unfocused, except when recording demos.
 	ebiten.SetRunnableOnUnfocused(*runnableWhenUnfocused || (demo.Playing() && dump.Active()))
+
+	log.Infof("finished early initialization")
 
 	return nil
 }
@@ -202,7 +203,11 @@ func (g *Game) InitStep() error {
 			log.Errorf("could not provide loading fractions: %v", err)
 		}
 	}
-	status, err := g.init.Enter("precaching credits", locale.G.Get("precaching credits"), "could not precache credits", splash.Single(credits.Precache))
+	status, err := g.init.Enter("precaching fonts", locale.G.Get("precaching fonts"), "could not precache fonts", splash.Single(font.KeepInCache))
+	if status != splash.Continue {
+		return err
+	}
+	status, err = g.init.Enter("precaching credits", locale.G.Get("precaching credits"), "could not precache credits", splash.Single(credits.Precache))
 	if status != splash.Continue {
 		return err
 	}
