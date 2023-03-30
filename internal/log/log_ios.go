@@ -46,11 +46,11 @@ import (
 #include <stdlib.h>
 #include <os/log.h>
 
-os_log_t create_os_log() {
+os_log_t aaaaxy_create_os_log() {
 	return os_log_create("org.golang.mobile", "os_log");
 }
 
-void os_log_wrap(os_log_t log, const char *str) {
+void aaaaxy_os_log_wrap(os_log_t log, const char *str) {
 	os_log(log, "%{public}s", str);
 }
 */
@@ -62,11 +62,11 @@ type osWriter struct {
 
 func (o osWriter) Write(p []byte) (n int, err error) {
 	cstr := C.CString(string(p))
-	C.os_log_wrap(o.w, cstr)
+	C.aaaaxy_os_log_wrap(o.w, cstr)
 	C.free(unsafe.Pointer(cstr))
 	return len(p), nil
 }
 
 func init() {
-	log.SetOutput(io.MultiWriter(os.Stderr, osWriter{C.create_os_log()}))
+	log.SetOutput(io.MultiWriter(os.Stderr, osWriter{C.aaaaxy_create_os_log()}))
 }
