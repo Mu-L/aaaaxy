@@ -87,6 +87,7 @@ type Game struct {
 	init      initState
 	canUpdate bool
 	canDraw   bool
+	canInit   bool
 
 	// screenWidth and screenHeight are updated by Layout().
 	screenWidth  int
@@ -168,6 +169,10 @@ func (g *Game) Update() error {
 	}
 
 	if !g.init.done {
+		if !g.canInit {
+			return nil
+		}
+		g.canInit = false
 		return g.InitStep()
 	}
 	g.canDraw = true
@@ -379,6 +384,7 @@ func (g *Game) drawAtGameSizeThenReturnTo(maybeScreen *ebiten.Image, to chan *eb
 	}
 
 	if !g.canDraw {
+		g.canInit = true
 		text, fraction := g.init.Current()
 		bg := palette.EGA(palette.Blue, uint8(m.Rint(255*(1-fraction))))
 		fg := palette.EGA(palette.LightGrey, 255)
@@ -398,10 +404,7 @@ func (g *Game) drawAtGameSizeThenReturnTo(maybeScreen *ebiten.Image, to chan *eb
 	}
 
 	timing.Section("fontcache")
-	err := font.KeepInCache()
-	if err != nil {
-		log.Fatalf("font.KeepInCache failed: %v", err)
-	}
+	font.KeepInCache()
 
 	timing.Section("world")
 	g.Menu.DrawWorld(drawDest)
@@ -486,6 +489,10 @@ func crtK2() float64 {
 }
 
 func (g *Game) Draw(screen *ebiten.Image) {
+	defer timing.Group()()
+	timing.Section("draw")
+	defer timing.Group()()
+
 	w, h := screen.Size()
 	if w != engine.GameWidth || h != engine.GameHeight {
 		// NOTE: This implies *screenStretch.
@@ -494,10 +501,6 @@ func (g *Game) Draw(screen *ebiten.Image) {
 			Max: go_image.Point{X: engine.GameWidth, Y: engine.GameHeight},
 		}).(*ebiten.Image)
 	}
-
-	defer timing.Group()()
-	timing.Section("draw")
-	defer timing.Group()()
 
 DoneDisposing:
 	for {
@@ -513,6 +516,7 @@ DoneDisposing:
 	offscreen.Collect()
 
 	if !*debugEnableDrawing {
+		g.canInit = true
 		return
 	}
 
@@ -537,6 +541,10 @@ DoneDisposing:
 }
 
 func (g *Game) DrawFinalScreen(screen ebiten.FinalScreen, offscreen *ebiten.Image, geoM ebiten.GeoM) {
+	defer timing.Group()()
+	timing.Section("drawfinal")
+	defer timing.Group()()
+
 	w, h := offscreen.Size()
 	if w != engine.GameWidth || h != engine.GameHeight {
 		// NOTE: This implies *screenStretch.
