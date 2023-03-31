@@ -2,9 +2,6 @@
 
 set -ex
 
-# TODO get advzip running on macOS.
-export ADVZIP=:
-
 export CGO_ENABLED=1
 export CGO_CPPFLAGS=-DNDEBUG
 export CGO_CFLAGS='-g0 -O3'
