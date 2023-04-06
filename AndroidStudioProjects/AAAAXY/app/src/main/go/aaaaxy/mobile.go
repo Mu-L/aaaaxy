@@ -20,6 +20,8 @@ package aaaaxy
 import (
 	"errors"
 	"fmt"
+	"os"
+	"runtime/pprof"
 	"time"
 
 	"github.com/jeandeaual/go-locale"
@@ -50,8 +52,9 @@ type game struct {
 }
 
 var (
-	g       *game
-	quitter Quitter
+	g        *game
+	quitter  Quitter
+	filesDir string
 )
 
 // SetQuitter receives an object that can quit the game.
@@ -75,7 +78,24 @@ func (g *game) Update() (err error) {
 	if !g.inited {
 		g.inited = true
 		locale.SetRunOnJVM(app.RunOnJVM)
+		f, err := os.Create(filesDir + "/loading.prof")
+		if err != nil {
+			log.Fatalf("could not create loading CPU profile: %v", err)
+		}
+		defer f.Close()
+		if err := pprof.StartCPUProfile(f); err != nil {
+			log.Fatalf("could not start CPU profile: %v", err)
+		}
+		log.Infof("before InitFull")
 		err = g.game.InitEarly()
+		if err == nil {
+			err = g.game.InitFull()
+		}
+		log.Infof("after InitFull: %v", err)
+		if err != nil {
+			log.Fatalf("could not initialize game: %v", err)
+		}
+		pprof.StopCPUProfile()
 	}
 	if err == nil {
 		err = g.game.Update()
@@ -134,6 +154,7 @@ func init() {
 
 // SetFilesDir forwards the location of the data files to the app.
 func SetFilesDir(dir string) {
+	filesDir = dir
 	vfs.SetFilesDir(dir)
 }
 
