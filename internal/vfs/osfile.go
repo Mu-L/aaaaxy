@@ -1,4 +1,4 @@
-// Copyright 2021 Google LLC
+// Copyright 2023 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,16 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//go:build ebitenginesinglethread
-// +build ebitenginesinglethread
-
-package dump
+package vfs
 
 import (
-	"github.com/hajimehoshi/ebiten/v2"
+	"io"
 )
 
-func dumpPixelsRGBA(img *ebiten.Image, cb func(pix []byte, err error)) {
-	pix, err := getPixelsRGBA(img)
-	cb(pix, err)
+type readFile interface {
+	io.Reader
+	io.Closer
+}
+
+type writeFile interface {
+	io.Writer
+	io.WriterAt
+	io.Closer
 }

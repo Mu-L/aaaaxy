@@ -18,7 +18,9 @@ import (
 	"errors"
 	"fmt"
 	go_image "image"
+	"io"
 	"math"
+	"runtime/pprof"
 	"strings"
 
 	"github.com/hajimehoshi/ebiten/v2"
@@ -42,6 +44,7 @@ import (
 	"github.com/divVerent/aaaaxy/internal/palette"
 	"github.com/divVerent/aaaaxy/internal/shader"
 	"github.com/divVerent/aaaaxy/internal/timing"
+	"github.com/divVerent/aaaaxy/internal/vfs"
 )
 
 var (
@@ -58,14 +61,15 @@ var (
 		"js/*":      "none",
 		"*/*":       "vga",
 	}), "render with palette; can be set to '"+strings.Join(palette.Names(), "', '")+"' or 'none'")
-	paletteRemapOnly          = flag.Bool("palette_remap_only", false, "only apply the palette's color remapping, do not actually reduce color set")
-	paletteRemapColors        = flag.Bool("palette_remap_colors", true, "remap input colors to close palette colors on load (less dither but wrong colors)")
-	paletteDitherSize         = flag.Int("palette_dither_size", 4, "dither pattern size (really should be a power of two when using the bayer dither mode)")
-	paletteDitherMode         = flag.String("palette_dither_mode", "plastic2", "dither type (none, bayer, bayer2, halftone, halftone2, plastic, plastic2, random or random2)")
-	paletteDitherWorldAligned = flag.Bool("palette_dither_world_aligned", true, "align dither pattern to world as opposed to screen")
-	debugEnableDrawing        = flag.Bool("debug_enable_drawing", true, "enable drawing the display; set to false for faster demo processing or similar")
-	showFPS                   = flag.Bool("show_fps", false, "show fps counter")
-	showTime                  = flag.Bool("show_time", false, "show game time")
+	paletteRemapOnly             = flag.Bool("palette_remap_only", false, "only apply the palette's color remapping, do not actually reduce color set")
+	paletteRemapColors           = flag.Bool("palette_remap_colors", true, "remap input colors to close palette colors on load (less dither but wrong colors)")
+	paletteDitherSize            = flag.Int("palette_dither_size", 4, "dither pattern size (really should be a power of two when using the bayer dither mode)")
+	paletteDitherMode            = flag.String("palette_dither_mode", "plastic2", "dither type (none, bayer, bayer2, halftone, halftone2, plastic, plastic2, random or random2)")
+	paletteDitherWorldAligned    = flag.Bool("palette_dither_world_aligned", true, "align dither pattern to world as opposed to screen")
+	debugEnableDrawing           = flag.Bool("debug_enable_drawing", true, "enable drawing the display; set to false for faster demo processing or similar")
+	showFPS                      = flag.Bool("show_fps", false, "show fps counter")
+	showTime                     = flag.Bool("show_time", false, "show game time")
+	debugLoadingScreenCpuprofile = flag.String("debug_loading_screen_cpuprofile", "", "write CPU profile of loading screen to file")
 )
 
 type ditherMode int
@@ -112,6 +116,8 @@ type Game struct {
 	paletteShader    *ebiten.Shader // Updates when paletteDitherSize changes.
 
 	framesToDump int
+
+	debugLoadingScreenCpuprofileF io.WriteCloser
 }
 
 var _ ebiten.Game = &Game{}
@@ -173,7 +179,26 @@ func (g *Game) Update() error {
 			return nil
 		}
 		g.canInit = false
-		return g.InitStep()
+		if *debugLoadingScreenCpuprofile != "" && g.debugLoadingScreenCpuprofileF == nil {
+			var err error
+			g.debugLoadingScreenCpuprofileF, err = vfs.OSCreate(*debugLoadingScreenCpuprofile)
+			if err != nil {
+				return fmt.Errorf("could not create CPU profile: %w", err)
+			}
+			if err := pprof.StartCPUProfile(g.debugLoadingScreenCpuprofileF); err != nil {
+				return fmt.Errorf("could not start CPU profile: %w", err)
+			}
+		}
+		err := g.InitStep()
+		if g.init.done && *debugLoadingScreenCpuprofile != "" {
+			pprof.StopCPUProfile()
+			err := g.debugLoadingScreenCpuprofileF.Close()
+			if err != nil {
+				return fmt.Errorf("could not close CPU profile: %w", err)
+			}
+			g.debugLoadingScreenCpuprofileF = nil
+		}
+		return err
 	}
 	g.canDraw = true
 
