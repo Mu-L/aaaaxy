@@ -35,11 +35,11 @@ import (
 #include <string.h>
 
 const char *documents_path() {
-	NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSArray<NSString *> *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	if ([paths count] < 1) {
 		return NULL;
 	}
-	NSString *path = [paths objectAtIndex: 0];
+	NSString *path = [paths firstObject];
 	if (path == nil) {
 		return NULL;
 	}
