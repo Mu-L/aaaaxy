@@ -48,9 +48,9 @@ type World struct {
 	renderer renderer
 
 	// tiles are all tiles currently loaded.
-	tiles []*level.Tile
+	tiles [tileWindowWidth * tileWindowHeight]*level.Tile
 	// markedTilesBuffer has the same size as tiles and is used when updating visibility.
-	markedTilesBuffer []m.Pos
+	markedTilesBuffer [tileWindowWidth * tileWindowHeight]m.Pos
 	// incarnations are all currently existing entity incarnations.
 	incarnations map[EntityIncarnation]struct{}
 	// entities are all entities currently loaded.
@@ -116,7 +116,7 @@ type World struct {
 
 // Initialized returns whether Init() has been called on this World before.
 func (w *World) Initialized() bool {
-	return w.tiles != nil
+	return w.Level != nil
 }
 
 func (w *World) tileIndex(pos m.Pos) int {
@@ -157,12 +157,12 @@ func (w *World) clearTile(pos m.Pos) {
 	w.tilesCleared++
 }
 
-func (w *World) forEachTile(f func(pos m.Pos, t *level.Tile)) {
-	for i, t := range w.tiles {
+func (w *World) forEachTile(f func(i int, t *level.Tile)) {
+	for i, t := range w.tiles[:] {
 		if t == nil {
 			continue
 		}
-		f(w.tilePos(i), t)
+		f(i, t)
 	}
 }
 
@@ -266,7 +266,6 @@ func (w *World) Init(saveState int) error {
 	w.clearEntities()
 
 	*w = World{
-		tiles:          make([]*level.Tile, tileWindowWidth*tileWindowHeight),
 		incarnations:   map[EntityIncarnation]struct{}{},
 		entities:       makeList(allList),
 		opaqueEntities: makeList(opaqueList),
@@ -408,8 +407,9 @@ func (w *World) RespawnPlayer(checkpointName string, newGameSection bool) error 
 	tile.VisibilityFlags = w.frameVis
 	w.clearEntities()
 	w.link(w.Player)
-	w.tiles = make([]*level.Tile, tileWindowWidth*tileWindowHeight)
-	w.markedTilesBuffer = make([]m.Pos, tileWindowWidth*tileWindowHeight)
+	for i := range w.tiles[:] {
+		w.tiles[i] = nil
+	}
 	w.setScrollPos(cpSp.LevelPos.Mul(level.TileSize)) // Scroll the tile into view.
 	w.setTile(cpSp.LevelPos, &tile)
 
@@ -658,7 +658,7 @@ func (w *World) updateVisibility(eye m.Pos, maxDist int) {
 	// BUG: the above also loads tiles (but doesn't mark) if their path was blocked by an entity.
 	// Workaround: mark them as if they were previous frame's tiles, so they're not a basis for loading and get cleared at the end if needed.
 	timing.Section("untrace_workaround")
-	w.forEachTile(func(pos m.Pos, tile *level.Tile) {
+	w.forEachTile(func(_ int, tile *level.Tile) {
 		if tile.VisibilityFlags == w.frameVis {
 			tile.VisibilityFlags ^= level.FrameVis
 		}
@@ -669,9 +669,9 @@ func (w *World) updateVisibility(eye m.Pos, maxDist int) {
 	timing.Section("expand")
 	markedTiles := w.markedTilesBuffer[:0]
 	justTraced := w.frameVis | level.TracedVis
-	w.forEachTile(func(tilePos m.Pos, tile *level.Tile) {
+	w.forEachTile(func(i int, tile *level.Tile) {
 		if tile.VisibilityFlags == justTraced {
-			markedTiles = append(markedTiles, tilePos)
+			markedTiles = append(markedTiles, w.tilePos(i))
 		}
 	})
 	numExpandSteps := (2*expandTiles+1)*(2*expandTiles+1) - 1
@@ -696,10 +696,11 @@ func (w *World) updateVisibility(eye m.Pos, maxDist int) {
 	}
 
 	timing.Section("spawn_search")
-	w.forEachTile(func(pos m.Pos, tile *level.Tile) {
+	w.forEachTile(func(i int, tile *level.Tile) {
 		if tile.VisibilityFlags&level.FrameVis != w.frameVis {
 			return
 		}
+		pos := w.tilePos(i)
 		for _, spawnable := range tile.Spawnables {
 			_, err := w.Spawn(spawnable, pos, tile)
 			if err != nil {
@@ -753,9 +754,9 @@ func (w *World) updateVisibility(eye m.Pos, maxDist int) {
 
 	// Delete all unmarked tiles.
 	timing.Section("cleanup_unmarked")
-	w.forEachTile(func(pos m.Pos, tile *level.Tile) {
+	w.forEachTile(func(i int, tile *level.Tile) {
 		if tile.VisibilityFlags&level.FrameVis != w.frameVis {
-			w.clearTile(pos)
+			w.clearTile(w.tilePos(i))
 		}
 	})
 }
