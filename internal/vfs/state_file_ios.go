@@ -18,7 +18,6 @@
 package vfs
 
 import (
-	"errors"
 	"fmt"
 	"path/filepath"
 	"unsafe"
