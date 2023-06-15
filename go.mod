@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/Microsoft/go-winio v0.6.1
+	github.com/abdullahdiaa/garabic v0.0.0-20230105201152-4c3eb72be29c
 	github.com/adrg/xdg v0.4.0
 	github.com/akavel/rsrc v0.10.2
 	github.com/fardog/tmx v0.0.0-20210504210836-02c45f261672
@@ -55,7 +56,7 @@ require (
 
 require (
 	github.com/otiai10/copy v1.6.0
-	github.com/spf13/cobra v0.0.5
+	github.com/spf13/cobra v0.0.6
 	golang.org/x/exp v0.0.0-20220126164734-073fb1339172 // indirect
 )
 

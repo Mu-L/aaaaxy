@@ -25,13 +25,14 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
 
+	"github.com/divVerent/aaaaxy/internal/locale"
 	m "github.com/divVerent/aaaaxy/internal/math"
 )
 
-// BoundString returns the bounding rectangle of the given text.
-func (f Face) BoundString(str string) m.Rect {
+// boundString returns the bounding rectangle of the given text.
+func (f Face) boundString(str string) m.Rect {
 	rect := text.BoundString(f.Outline, str)
-	return m.Rect{
+	r := m.Rect{
 		Origin: m.Pos{
 			X: rect.Min.X,
 			Y: rect.Min.Y,
@@ -41,6 +42,19 @@ func (f Face) BoundString(str string) m.Rect {
 			DY: rect.Max.Y - rect.Min.Y,
 		},
 	}
+	if r.Size.DX <= 0 {
+		r.Size.DX = 1
+	}
+	if r.Size.DY <= 0 {
+		r.Size.DY = 1
+	}
+	return r
+}
+
+// BoundString returns the bounding rectangle of the given text.
+func (f Face) BoundString(str string) m.Rect {
+	str = locale.Active.Shape(str)
+	return f.boundString(str)
 }
 
 // drawLine draws one line of text.
@@ -72,9 +86,10 @@ const (
 
 // Draw draws the given text.
 func (f Face) Draw(dst draw.Image, str string, pos m.Pos, boxAlign Align, fg, bg color.Color) {
+	str = locale.Active.Shape(str)
 	// We need to do our own line splitting because
 	// we always want to center and Ebitengine would left adjust.
-	totalBounds := f.BoundString(str)
+	totalBounds := f.boundString(str)
 	// AsBounds: offset := pos.X + totalBounds.Size.DX/2 + totalBounds.Origin.X
 	// Center: offset := pos.X
 	// Left: offset := pos.X + totalBounds.Size.DX/2

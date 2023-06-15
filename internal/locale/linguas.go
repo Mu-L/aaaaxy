@@ -17,6 +17,8 @@ package locale
 import (
 	"sort"
 	"strings"
+
+	"github.com/abdullahdiaa/garabic"
 )
 
 // Lingua identifies a language.
@@ -30,6 +32,10 @@ func (l Lingua) Name() string {
 	switch l {
 	case "":
 		return "English"
+	case "ar":
+		return "العربية"
+	case "ar-EG":
+		return "العربية (مصر)"
 	case "de":
 		return "Deutsch"
 	case "de-CH":
@@ -51,6 +57,8 @@ func (l Lingua) Name() string {
 
 func (l Lingua) Font() string {
 	switch l {
+	case "ar", "ar-EG":
+		return "unifont"
 	case "zh-Hans":
 		return "unifont"
 	default:
@@ -107,6 +115,16 @@ func (l Lingua) Canonical() Lingua {
 		return "zh-Hans"
 	default:
 		return l
+	}
+}
+
+// Performs glyph shaping on a given string.
+func (l Lingua) Shape(s string) string {
+	switch l {
+	case "ar", "ar-EG":
+		return garabic.Shape(s)
+	default:
+		return s
 	}
 }
 
