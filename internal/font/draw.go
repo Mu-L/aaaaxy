@@ -83,6 +83,7 @@ func drawLine(f font.Face, dst draw.Image, line string, x, y int, fg color.Color
 		if ok {
 			// Use Ebitengine's glyph cache.
 			text.Draw(dst, line, f, x, y, fg)
+			return
 		}
 	}
 	// No glyph cache.
