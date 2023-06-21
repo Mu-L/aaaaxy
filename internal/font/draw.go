@@ -26,7 +26,6 @@ import (
 	"golang.org/x/image/math/fixed"
 
 	"github.com/divVerent/aaaaxy/internal/locale"
-	"github.com/divVerent/aaaaxy/internal/log"
 	m "github.com/divVerent/aaaaxy/internal/math"
 )
 
@@ -46,8 +45,7 @@ func (f Face) boundString(str string) m.Rect {
 			},
 		}
 	} else {
-		bounds, advance := font.BoundString(f.Outline, str)
-		log.Infof("s=%q -> b=%v, a=%v", str, bounds, advance)
+		bounds, _ := font.BoundString(f.Outline, str)
 		x0 := bounds.Min.X.Floor()
 		y0 := bounds.Min.Y.Floor()
 		x1 := bounds.Max.X.Ceil()
@@ -75,7 +73,6 @@ func (f Face) boundString(str string) m.Rect {
 // BoundString returns the bounding rectangle of the given text.
 func (f Face) BoundString(str string) m.Rect {
 	str = locale.Active.Shape(str)
-	str = ">" + str + "<"
 	return f.boundString(str)
 }
 
@@ -110,7 +107,6 @@ const (
 // Draw draws the given text.
 func (f Face) Draw(dst draw.Image, str string, pos m.Pos, boxAlign Align, fg, bg color.Color) {
 	str = locale.Active.Shape(str)
-	str = ">" + str + "<"
 	// We need to do our own line splitting because
 	// we always want to center and Ebitengine would left adjust.
 	lines := strings.Split(str, "\n")
