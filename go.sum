@@ -5,8 +5,6 @@ github.com/Kodeworks/golang-image-ico v0.0.0-20141118225523-73f0f4cfade9/go.mod 
 github.com/Microsoft/go-winio v0.6.1 h1:9/kr64B9VUZrLm5YYwbGtUJnMgqWVOdUAXu6Migciow=
 github.com/Microsoft/go-winio v0.6.1/go.mod h1:LRdKpFKfdobln8UmuiYcKPot9D2v6svN5+sAH+4kjUM=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/abdullahdiaa/garabic v0.0.0-20230105201152-4c3eb72be29c h1:hv0YuxeTc/3d90YPDZIzWeYGLoLI1oNk/xcyZ94oI1o=
-github.com/abdullahdiaa/garabic v0.0.0-20230105201152-4c3eb72be29c/go.mod h1:JCJzUt3LLb+rVN+4v7lIBkXp+zmpt9Lz8HmeKjluEjY=
 github.com/adrg/xdg v0.4.0 h1:RzRqFcjH4nE5C6oTAxhBtoE2IRyjBSa62SCbyPidvls=
 github.com/adrg/xdg v0.4.0/go.mod h1:N6ag73EX4wyxeaoeHctc1mas01KZgsj5tYiAIwqJE/E=
 github.com/akavel/rsrc v0.8.0/go.mod h1:uLoCtb9J+EyAqh+26kdrTgmzRBFPGOolLWKpdxkKq+c=
@@ -43,6 +41,8 @@ github.com/dgrijalva/jwt-go v3.2.0+incompatible/go.mod h1:E3ru+11k8xSBh+hMPgOLZm
 github.com/dgryski/go-sip13 v0.0.0-20181026042036-e10d5fee7954/go.mod h1:vAd38F8PWV+bWy6jNmig1y/TA+kYO4g3RSRF0IAv0no=
 github.com/divVerent/ebiten/v2 v2.5.4-with-574925cf7a72deaf73be4c481348a7a44f7b7e19-and-cc247962703eba99eae732876496375191f16cbe h1:xqcSA0YU9K9c/aw2p09bpZM+RHQ8k+NQCl28gdXOqnM=
 github.com/divVerent/ebiten/v2 v2.5.4-with-574925cf7a72deaf73be4c481348a7a44f7b7e19-and-cc247962703eba99eae732876496375191f16cbe/go.mod h1:mnHSOVysTr/nUZrN1lBTRqhK4NG+T9NR3JsJP2rCppk=
+github.com/divVerent/garabic v0.0.0-20230621165509-da8941fc0eb4 h1:/6hUTGU0wn2hMk1bxatWV9xR3uXp7DpHznGfTE6d6Rc=
+github.com/divVerent/garabic v0.0.0-20230621165509-da8941fc0eb4/go.mod h1:JCJzUt3LLb+rVN+4v7lIBkXp+zmpt9Lz8HmeKjluEjY=
 github.com/ebitengine/purego v0.4.0-alpha.4 h1:Y7yIV06Yo5M2BAdD7EVPhfp6LZ0tEcQo5770OhYUVes=
 github.com/ebitengine/purego v0.4.0-alpha.4/go.mod h1:ah1In8AOtksoNK6yk5z1HTJeUkC1Ez4Wk2idgGslMwQ=
 github.com/emirpasic/gods v1.12.0 h1:QAUIPSaCu4G+POclxeqb3F+WPpdKqFGlw36+yOzGlrg=
