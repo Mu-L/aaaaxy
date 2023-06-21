@@ -118,7 +118,7 @@ func (l Lingua) Canonical() Lingua {
 	}
 }
 
-// Performs glyph shaping on a given string.
+// Shape performs glyph shaping on a given string.
 func (l Lingua) Shape(s string) string {
 	switch l {
 	case "ar", "ar-EG":
@@ -126,6 +126,11 @@ func (l Lingua) Shape(s string) string {
 	default:
 		return s
 	}
+}
+
+// UseEbitenText returns whether using ebiten/text for font drawing is safe.
+func (l Lingua) UseEbitenText() bool {
+	return true
 }
 
 // LinguasSorted returns the languages sorted by humanly expected ordering.
