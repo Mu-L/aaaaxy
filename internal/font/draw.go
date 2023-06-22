@@ -73,7 +73,17 @@ func (f Face) boundString(str string) m.Rect {
 // BoundString returns the bounding rectangle of the given text.
 func (f Face) BoundString(str string) m.Rect {
 	str = locale.Active.Shape(str)
-	return f.boundString(str)
+	lines := strings.Split(str, "\n")
+	var totalBounds m.Rect
+	lineHeight := f.Outline.Metrics().Height.Ceil()
+	y := 0
+	for _, line := range lines {
+		bounds := f.boundString(line)
+		bounds.Origin.Y += y
+		totalBounds = totalBounds.Union(bounds)
+		y += lineHeight
+	}
+	return totalBounds
 }
 
 // drawLine draws one line of text.
@@ -139,7 +149,8 @@ func (f Face) Draw(dst draw.Image, str string, pos m.Pos, boxAlign Align, fg, bg
 	case Right:
 		offset -= (totalMax - totalMin + 1) / 2
 	}
-	fy := fixed.I(pos.Y)
+	y := pos.Y
+	lineHeight := f.Outline.Metrics().Height.Ceil()
 	for i, line := range lines {
 		lineBounds := bounds[i]
 		// totalBounds: tX size tDX
@@ -148,13 +159,12 @@ func (f Face) Draw(dst draw.Image, str string, pos m.Pos, boxAlign Align, fg, bg
 		// Thus: lX+d - tX = tX+tDX - (lX+lDX+d)
 		// d = tX - lX + (tDX - lDX)/2.
 		x := offset - lineBounds.Origin.X - lineBounds.Size.DX/2
-		y := fy.Floor()
 		if _, _, _, a := bg.RGBA(); a != 0 {
 			drawLine(f.Outline, dst, line, x, y, bg)
 		}
 		// Draw the text itself.
 		drawLine(f.Face, dst, line, x, y, fg)
-		fy += f.Outline.Metrics().Height + 1 // Line height is 1 pixel above font height.
+		y += lineHeight
 	}
 }
 
