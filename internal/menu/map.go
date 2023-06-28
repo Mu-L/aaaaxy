@@ -16,13 +16,13 @@ package menu
 
 import (
 	"fmt"
-	"image/color"
 	"math/rand"
 	"sort"
 
 	"github.com/hajimehoshi/ebiten/v2"
 
 	"github.com/divVerent/aaaaxy/internal/engine"
+	"github.com/divVerent/aaaaxy/internal/flag"
 	"github.com/divVerent/aaaaxy/internal/font"
 	"github.com/divVerent/aaaaxy/internal/fun"
 	"github.com/divVerent/aaaaxy/internal/image"
@@ -33,6 +33,10 @@ import (
 	"github.com/divVerent/aaaaxy/internal/palette"
 	"github.com/divVerent/aaaaxy/internal/playerstate"
 	"github.com/divVerent/aaaaxy/internal/propmap"
+)
+
+var (
+	debugAntiAlias = flag.Bool("debug_anti_alias", true, "allow anti aliasing")
 )
 
 type MapScreen struct {
@@ -52,7 +56,6 @@ type MapScreen struct {
 	cpFlippedSelectedSprite *ebiten.Image
 	deadEndSprite           *ebiten.Image
 	cpCheckmarkSprite       *ebiten.Image
-	whiteImage              *ebiten.Image
 
 	nameHovered bool
 }
@@ -98,8 +101,6 @@ func (s *MapScreen) Init(c *Controller) error {
 	if err != nil {
 		return err
 	}
-	s.whiteImage = ebiten.NewImage(1, 1)
-	s.whiteImage.Fill(color.Gray{255})
 
 	var parseErr error
 
@@ -285,7 +286,7 @@ func (s *MapScreen) Draw(screen *ebiten.Image) {
 	opts.GeoM.Scale(float64(s.MapRect.Size.DX+2*mapBorder), float64(s.MapRect.Size.DY+2*mapBorder))
 	opts.GeoM.Translate(float64(s.MapRect.Origin.X-mapBorder), float64(s.MapRect.Origin.Y-mapBorder))
 	opts.ColorScale.Scale(2.0/9.0, 2.0/9.0, 2.0/9.0, 2.0/3.0) // Color: #555555 at 2/3 alpha.
-	screen.DrawImage(s.whiteImage, &opts)
+	screen.DrawImage(s.Controller.WhiteImage, &opts)
 
 	// First draw all edges.
 	cpPos := make(map[string]m.Pos, len(s.SortedLocs))
@@ -390,13 +391,13 @@ func (s *MapScreen) Draw(screen *ebiten.Image) {
 				options := &ebiten.DrawTrianglesOptions{
 					Blend:     ebiten.BlendSourceOver,
 					Filter:    ebiten.FilterNearest,
-					AntiAlias: true,
+					AntiAlias: *debugAntiAlias,
 				}
 				geoM := &ebiten.GeoM{}
 				geoM.Scale(0, 0)
-				engine.DrawPolyLine(screen, edgeThickness, []m.Pos{startPos, endPos}, s.whiteImage, color, geoM, options)
+				engine.DrawPolyLine(screen, edgeThickness, []m.Pos{startPos, endPos}, s.Controller.WhiteImage, color, geoM, options)
 				if startPos2 != endPos2 {
-					engine.DrawPolyLine(screen, edgeThickness, []m.Pos{startPos2, endPos2}, s.whiteImage, color, geoM, options)
+					engine.DrawPolyLine(screen, edgeThickness, []m.Pos{startPos2, endPos2}, s.Controller.WhiteImage, color, geoM, options)
 				}
 			}
 		}
