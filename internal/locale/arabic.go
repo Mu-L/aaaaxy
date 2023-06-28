@@ -15,29 +15,11 @@
 package locale
 
 import (
-	"strings"
+	"golang.org/x/text/language"
 
-	"github.com/benoitkugler/textprocessing/fribidi"
+	"github.com/hajimehoshi/bitmapfont/v3"
 )
 
 func (l Lingua) shapeArabic(s string) string {
-	lines := strings.Split(s, "\n")
-	var out []string
-	var parType fribidi.ParType = fribidi.RTL
-	for _, l := range lines {
-		r := []rune(l)
-		v, _ := fribidi.LogicalToVisual(fribidi.DefaultFlags, r, &parType)
-		r = v.Str
-		for i, j := 0, 0; i < len(r); i++ {
-			ch := r[i]
-			// Skip ZWNBSP as they have no purpose at render time and GNU Unifont shows them.
-			if ch == 0xFEFF {
-				continue
-			}
-			r[j] = ch
-			j++
-		}
-		out = append(out, string(v.Str))
-	}
-	return strings.Join(out, "\n")
+	return bitmapfont.PresentationForms(s, bitmapfont.DirectionRightToLeft, language.MustParse(string(l)))
 }

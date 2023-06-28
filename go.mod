@@ -6,10 +6,10 @@ require (
 	github.com/Microsoft/go-winio v0.6.1
 	github.com/adrg/xdg v0.4.0
 	github.com/akavel/rsrc v0.10.2
-	github.com/benoitkugler/textprocessing v0.0.3
 	github.com/fardog/tmx v0.0.0-20210504210836-02c45f261672
 	github.com/google/go-cmp v0.5.9
 	github.com/google/go-licenses v0.0.0-20211006200916-ceb292363ec8
+	github.com/hajimehoshi/bitmapfont/v3 v3.0.0
 	github.com/hajimehoshi/ebiten/v2 v2.5.4
 	github.com/jeandeaual/go-locale v0.0.0-20220711133428-7de61946b173
 	github.com/leonelquinteros/gotext v1.5.2
@@ -25,7 +25,6 @@ require (
 )
 
 require (
-	github.com/benoitkugler/textlayout v0.3.0 // indirect
 	github.com/dchest/jsmin v0.0.0-20220218165748-59f39799265f // indirect
 	github.com/ebitengine/purego v0.4.0-alpha.4 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
