@@ -355,6 +355,8 @@ func SetFont(font string) error {
 		ByName = map[string]*Face{}
 		ByFont[font] = ByName
 		switch font {
+		case "bitmapfont":
+			return initBitmapfont()
 		case "unifont":
 			return initUnifont()
 		default:

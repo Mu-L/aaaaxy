@@ -15,11 +15,18 @@
 package locale
 
 import (
+	"strings"
+
 	"golang.org/x/text/language"
 
 	"github.com/hajimehoshi/bitmapfont/v3"
 )
 
 func (l Lingua) shapeArabic(s string) string {
-	return bitmapfont.PresentationForms(s, bitmapfont.DirectionRightToLeft, language.MustParse(string(l)))
+	s = bitmapfont.PresentationForms(s, bitmapfont.DirectionRightToLeft, language.MustParse(string(l)))
+
+	// Mirroring. Sadly, it's not in PresentationForms() already.
+	s = strings.NewReplacer("(", ")", ")", "(").Replace(s)
+
+	return s
 }

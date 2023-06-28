@@ -56,7 +56,7 @@ func (l Lingua) Name() string {
 func (l Lingua) Font() string {
 	switch l {
 	case "ar", "ar-EG":
-		return "unifont"
+		return "bitmapfont"
 	case "zh-Hans":
 		return "unifont"
 	default:
