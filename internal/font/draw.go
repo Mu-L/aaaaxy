@@ -117,7 +117,9 @@ const (
 
 // Draw draws the given text.
 func (f Face) Draw(dst draw.Image, str string, pos m.Pos, boxAlign Align, fg, bg color.Color) {
+	// log.Infof("PRE-SHAPING: %s", str)
 	str = locale.Active.Shape(str)
+	// log.Infof("POST-SHAPING: %s", str)
 	// We need to do our own line splitting because
 	// we always want to center and Ebitengine would left adjust.
 	lines := strings.Split(str, "\n")

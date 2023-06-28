@@ -17,10 +17,6 @@ package locale
 import (
 	"sort"
 	"strings"
-
-	"golang.org/x/text/language"
-
-	"github.com/hajimehoshi/bitmapfont/v3"
 )
 
 // Lingua identifies a language.
@@ -124,7 +120,7 @@ func (l Lingua) Canonical() Lingua {
 func (l Lingua) Shape(s string) string {
 	switch l {
 	case "ar", "ar-EG":
-		return bitmapfont.PresentationForms(s, bitmapfont.DirectionRightToLeft, language.MustParse(string(l)))
+		return l.shapeArabic(s)
 	default:
 		return s
 	}
