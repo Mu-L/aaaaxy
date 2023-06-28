@@ -18,7 +18,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/abdullahdiaa/garabic"
+	"golang.org/x/text/language"
+
+	"github.com/hajimehoshi/bitmapfont/v3"
 )
 
 // Lingua identifies a language.
@@ -122,7 +124,7 @@ func (l Lingua) Canonical() Lingua {
 func (l Lingua) Shape(s string) string {
 	switch l {
 	case "ar", "ar-EG":
-		return garabic.Shape(s)
+		return bitmapfont.PresentationForms(s, bitmapfont.DirectionRightToLeft, language.MustParse(string(l)))
 	default:
 		return s
 	}
