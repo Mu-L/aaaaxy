@@ -72,5 +72,3 @@ require (
 
 // update-ebitengine-fork.sh changes:
 replace github.com/hajimehoshi/ebiten/v2 => github.com/divVerent/ebiten/v2 v2.5.4-with-574925cf7a72deaf73be4c481348a7a44f7b7e19-and-cc247962703eba99eae732876496375191f16cbe-and-b96aea70f1559d8a35856bf6a7c814ae168dcce4-and-1789f509e1153944a44651db3c07dc35042b6e85
-
-replace github.com/abdullahdiaa/garabic => github.com/divVerent/garabic v0.0.0-20230621165509-da8941fc0eb4
